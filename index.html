@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+    <title>🐮 Lamumu Cow Stack</title>
+   <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <!-- Start Screen -->
+    <div class="screen start-screen active" id="start-screen">
+        <div class="game-title">🐮 Lamumu Cow Stack</div>
+        <div class="creator">Made with care by <a href="https://x.com/0xTowhid" target="_blank"> Towhid </a></div>
+        <input type="text" class="username-input" id="username" placeholder="Enter your X username" maxlength="20">
+        <button class="start-btn" onclick="startGame()">Start Game</button>
+        <div class="leaderboard" id="start-leaderboard">
+            <h3>Top 5 Players</h3>
+            <div id="start-leaderboard-list">No scores yet</div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div class="screen game-screen" id="game-screen">
+        <div class="game-ui">
+            <div class="score">Score: <span id="score">0</span></div>
+            <div class="timer">Timer: <span id="timer">60</span></div>
+            <div class="lives">
+                <span id="hearts">❤️❤️❤️</span>
+            </div>
+        </div>
+
+        <div class="game-canvas-container" id="game-container">
+            <canvas class="game-canvas" id="game-canvas" width="300" height="400"></canvas>
+            <div class="crane" id="crane">
+                <div class="cow-on-crane" id="crane-cow"></div>
+            </div>
+            <div class="ground"></div>
+            <div class="stacking-zone"></div>
+        </div>
+
+        <!-- Instructions Popup -->
+        <div class="instructions-popup" id="instructions-popup">
+            <div class="popup-title"> How to Play </div>
+            <div class="popup-text">
+                • Watch the crane move left and right<br>
+                • Tap the game area to drop the cow<br>
+                • Stack cows in the middle zone for best results<br>
+                • You have 3 lives and 60 seconds total
+            </div>
+            <div class="popup-countdown">Starting in: <span id="countdown">5</span></div>
+        </div>
+
+        <div class="instructions">
+            Tap on the game area to drop the cow<br>
+            Avoid letting cows fall completely off the stack
+        </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div class="screen gameover-screen" id="gameover-screen">
+        <div class="game-title">🐮 Game Over!</div>
+          <div class="creator">Made with care by <a href="https://x.com/0xTowhid" target="_blank"> Towhid </a></div>
+        <div class="final-stats">
+            <div class="stat-row">
+                <span>Final Score:</span>
+                <span id="final-score">0</span>
+            </div>
+            <div class="stat-row">
+                <span>Time Survived:</span>
+                <span id="time-survived">0s</span>
+            </div>
+            <div class="stat-row">
+                <span>Highest Stack:</span>
+                <span id="highest-stack">0</span>
+            </div>
+        </div>
+
+        <button class="share-btn" onclick="shareOnX()"> Share on X</button>
+        <button class="restart-btn" onclick="restartGame()">Play Again</button>
+
+        <div class="leaderboard">
+            <h3>🏆 Leaderboard</h3>
+            <div id="leaderboard-list">No scores yet</div>
+        </div>
+    </div>
+
+
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="index.js">
+ 
+    </script>
+</body>
+</html>
