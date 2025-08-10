@@ -635,6 +635,20 @@ function endGame() {
     setTimeout(() => {
         document.getElementById('game-screen').classList.remove('active');
         document.getElementById('gameover-screen').classList.add('active');
+        
+        // Make sure share and restart buttons are visible and functional
+        const shareBtn = document.getElementById('share-button');
+        const restartBtn = document.getElementById('restart-button');
+        
+        if (shareBtn) {
+            shareBtn.style.display = 'block';
+            shareBtn.onclick = shareOnX;
+        }
+        
+        if (restartBtn) {
+            restartBtn.style.display = 'block';
+            restartBtn.onclick = restartGame;
+        }
     }, 500);
 }
 
@@ -685,7 +699,35 @@ document.addEventListener('touchstart', function(e) {
 window.addEventListener('load', () => {
     initializeAudio();
     addButtonSoundEffects();
+    initializeButtons();
 });
+
+// Initialize button event listeners
+function initializeButtons() {
+    // Start game button
+    const startBtn = document.getElementById('start-button');
+    if (startBtn) {
+        startBtn.onclick = startGame;
+    }
+    
+    // Share button
+    const shareBtn = document.getElementById('share-button');
+    if (shareBtn) {
+        shareBtn.onclick = shareOnX;
+    }
+    
+    // Restart button
+    const restartBtn = document.getElementById('restart-button');
+    if (restartBtn) {
+        restartBtn.onclick = restartGame;
+    }
+    
+    // Mute button
+    const muteBtn = document.getElementById('mute-button');
+    if (muteBtn) {
+        muteBtn.onclick = toggleMute;
+    }
+}
 
 // Handle orientation changes on mobile
 window.addEventListener('orientationchange', function() {
