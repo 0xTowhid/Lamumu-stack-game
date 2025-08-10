@@ -1,144 +1,144 @@
 let database = null;
 let firebaseInitialized = false;
 
-function initializeFirebase() {
-    try {
-        const firebaseConfig = {
-            apiKey: "AIzaSyC-0nuM-L5sDFNd0cPrB8QWAwt7A_MMdhM",
-            authDomain: "cowstackgame.firebaseapp.com",
-            databaseURL: "https://cowstackgame-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "cowstackgame",
-            storageBucket: "cowstackgame.firebasestorage.app",
-            messagingSenderId: "353757446914",
-            appId: "1:353757446914:web:ecc27cdef9514d786ab81b",
-            measurementId: "G-GRSRV5C3XP"
-        };
+// function initializeFirebase() {
+//     try {
+//         const firebaseConfig = {
+//             apiKey: "AIzaSyC-0nuM-L5sDFNd0cPrB8QWAwt7A_MMdhM",
+//             authDomain: "cowstackgame.firebaseapp.com",
+//             databaseURL: "https://cowstackgame-default-rtdb.asia-southeast1.firebasedatabase.app",
+//             projectId: "cowstackgame",
+//             storageBucket: "cowstackgame.firebasestorage.app",
+//             messagingSenderId: "353757446914",
+//             appId: "1:353757446914:web:ecc27cdef9514d786ab81b",
+//             measurementId: "G-GRSRV5C3XP"
+//         };
 
-        if (typeof firebase !== 'undefined') {
-            firebase.initializeApp(firebaseConfig);
-            database = firebase.database();
-            firebaseInitialized = true;
-            console.log('Firebase initialized successfully');
+//         if (typeof firebase !== 'undefined') {
+//             firebase.initializeApp(firebaseConfig);
+//             database = firebase.database();
+//             firebaseInitialized = true;
+//             console.log('Firebase initialized successfully');
             
-            // Load leaderboard after Firebase is ready
-            updateLeaderboard();
-        } else {
-            console.error('Firebase SDK not loaded');
-            firebaseInitialized = false;
-        }
-    } catch (error) {
-        console.error('Firebase initialization failed:', error);
-        firebaseInitialized = false;
-    }
-}
+//             // Load leaderboard after Firebase is ready
+//             updateLeaderboard();
+//         } else {
+//             console.error('Firebase SDK not loaded');
+//             firebaseInitialized = false;
+//         }
+//     } catch (error) {
+//         console.error('Firebase initialization failed:', error);
+//         firebaseInitialized = false;
+//     }
+// }
 
 // In-memory leaderboard storage (fallback)
-let gameLeaderboard = [];
+// let gameLeaderboard = [];
 
-function saveScore() {
-    // Save locally first (always works)
-    const newScore = {
-        username: playerUsername,
-        score: score,
-        stackHeight: highestStack,
-        timeSurvived: timeSurvived,
-        date: new Date().toLocaleDateString()
-    };
+// function saveScore() {
+//     // Save locally first (always works)
+//     const newScore = {
+//         username: playerUsername,
+//         score: score,
+//         stackHeight: highestStack,
+//         timeSurvived: timeSurvived,
+//         date: new Date().toLocaleDateString()
+//     };
     
-    gameLeaderboard.push(newScore);
-    gameLeaderboard.sort((a, b) => b.score - a.score);
-    gameLeaderboard = gameLeaderboard.slice(0, 5);
+//     gameLeaderboard.push(newScore);
+//     gameLeaderboard.sort((a, b) => b.score - a.score);
+//     gameLeaderboard = gameLeaderboard.slice(0, 5);
     
-    console.log('Score saved locally:', newScore);
+//     console.log('Score saved locally:', newScore);
     
-    // Save to Firebase if available
-    if (firebaseInitialized && database) {
-        const firebaseScore = {
-            username: playerUsername,
-            score: score,
-            stackHeight: highestStack,
-            timeSurvived: timeSurvived,
-            timestamp: Date.now(),
-            date: new Date().toLocaleDateString()
-        };
+//     // Save to Firebase if available
+//     if (firebaseInitialized && database) {
+//         const firebaseScore = {
+//             username: playerUsername,
+//             score: score,
+//             stackHeight: highestStack,
+//             timeSurvived: timeSurvived,
+//             timestamp: Date.now(),
+//             date: new Date().toLocaleDateString()
+//         };
         
-        database.ref('global-leaderboard').push(firebaseScore)
-            .then(() => {
-                console.log('Score saved to Firebase successfully');
-                // Update leaderboard after successful save
-                setTimeout(updateLeaderboard, 1000);
-            })
-            .catch(error => {
-                console.error('Firebase save failed:', error);
-                // Show local leaderboard as fallback
-                showLocalLeaderboard();
-            });
-    } else {
-        console.log('Firebase not available, showing local leaderboard');
-        showLocalLeaderboard();
-    }
-}
+//         database.ref('global-leaderboard').push(firebaseScore)
+//             .then(() => {
+//                 console.log('Score saved to Firebase successfully');
+//                 // Update leaderboard after successful save
+//                 setTimeout(updateLeaderboard, 1000);
+//             })
+//             .catch(error => {
+//                 console.error('Firebase save failed:', error);
+//                 // Show local leaderboard as fallback
+//                 showLocalLeaderboard();
+//             });
+//     } else {
+//         console.log('Firebase not available, showing local leaderboard');
+//         showLocalLeaderboard();
+//     }
+// }
 
-function updateLeaderboard() {
-    console.log('Updating leaderboard...');
+// function updateLeaderboard() {
+//     console.log('Updating leaderboard...');
     
-    if (!firebaseInitialized || !database) {
-        console.log('Firebase not available, showing local leaderboard');
-        showLocalLeaderboard();
-        return;
-    }
+//     if (!firebaseInitialized || !database) {
+//         console.log('Firebase not available, showing local leaderboard');
+//         showLocalLeaderboard();
+//         return;
+//     }
 
-    // Load global leaderboard from Firebase
-    database.ref('global-leaderboard')
-        .orderByChild('score')
-        .limitToLast(5)
-        .once('value')
-        .then((snapshot) => {
-            const globalScores = [];
-            snapshot.forEach(child => {
-                globalScores.unshift(child.val());
-            });
+//     // Load global leaderboard from Firebase
+//     database.ref('global-leaderboard')
+//         .orderByChild('score')
+//         .limitToLast(5)
+//         .once('value')
+//         .then((snapshot) => {
+//             const globalScores = [];
+//             snapshot.forEach(child => {
+//                 globalScores.unshift(child.val());
+//             });
             
-            console.log('Global scores loaded:', globalScores);
-            displayLeaderboard(globalScores, 'Global Leaderboard');
-        })
-        .catch(error => {
-            console.error('Firebase load failed:', error);
-            showLocalLeaderboard();
-        });
-}
+//             console.log('Global scores loaded:', globalScores);
+//             displayLeaderboard(globalScores, 'Global Leaderboard');
+//         })
+//         .catch(error => {
+//             console.error('Firebase load failed:', error);
+//             showLocalLeaderboard();
+//         });
+// }
 
-function showLocalLeaderboard() {
-    console.log('Showing local leaderboard:', gameLeaderboard);
-    displayLeaderboard(gameLeaderboard, 'Local Leaderboard');
-}
+// function showLocalLeaderboard() {
+//     console.log('Showing local leaderboard:', gameLeaderboard);
+//     displayLeaderboard(gameLeaderboard, 'Local Leaderboard');
+// }
 
-function displayLeaderboard(scores, title) {
-    const leaderboardList = document.getElementById('leaderboard-list');
-    const startLeaderboardList = document.getElementById('start-leaderboard-list');
+// function displayLeaderboard(scores, title) {
+//     const leaderboardList = document.getElementById('leaderboard-list');
+//     const startLeaderboardList = document.getElementById('start-leaderboard-list');
     
-    if (!scores || scores.length === 0) {
-        const emptyHTML = `<div style="text-align: center; opacity: 0.7;">No scores yet!</div>`;
-        if (leaderboardList) leaderboardList.innerHTML = title + '<br>' + emptyHTML;
-        if (startLeaderboardList) startLeaderboardList.innerHTML = title + '<br>' + emptyHTML;
-        return;
-    }
+//     if (!scores || scores.length === 0) {
+//         const emptyHTML = `<div style="text-align: center; opacity: 0.7;">No scores yet!</div>`;
+//         if (leaderboardList) leaderboardList.innerHTML = title + '<br>' + emptyHTML;
+//         if (startLeaderboardList) startLeaderboardList.innerHTML = title + '<br>' + emptyHTML;
+//         return;
+//     }
     
-    const leaderboardHTML = scores.map((entry, index) => {
-        const crown = index === 0 ? '👑' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
-        return `<div class="leaderboard-entry">
-            <span class="rank">${crown}#${index + 1}</span>
-            <span>@${entry.username}</span>
-            <span>${entry.score}</span>
-        </div>`;
-    }).join('');
+//     const leaderboardHTML = scores.map((entry, index) => {
+//         const crown = index === 0 ? '👑' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
+//         return `<div class="leaderboard-entry">
+//             <span class="rank">${crown}#${index + 1}</span>
+//             <span>@${entry.username}</span>
+//             <span>${entry.score}</span>
+//         </div>`;
+//     }).join('');
     
-    const displayHTML = title + '<br>' + leaderboardHTML;
-    if (leaderboardList) leaderboardList.innerHTML = displayHTML;
-    if (startLeaderboardList) startLeaderboardList.innerHTML = displayHTML;
+//     const displayHTML = title + '<br>' + leaderboardHTML;
+//     if (leaderboardList) leaderboardList.innerHTML = displayHTML;
+//     if (startLeaderboardList) startLeaderboardList.innerHTML = displayHTML;
     
-    console.log('Leaderboard displayed successfully');
-}
+//     console.log('Leaderboard displayed successfully');
+// }
 
 
 
@@ -939,16 +939,10 @@ document.addEventListener('touchstart', function(e) {
 
 // Initialize everything on page load
 window.addEventListener('load', () => {
-    console.log('Page loaded, initializing...');
-    initializeFirebase();
     initializeAudio();
     addButtonSoundEffects();
 });
 
-function refreshLeaderboard() {
-    console.log('Manual leaderboard refresh');
-    updateLeaderboard();
-}
 
 // Handle orientation changes on mobile
 window.addEventListener('orientationchange', function() {
@@ -962,21 +956,21 @@ window.addEventListener('orientationchange', function() {
 });
 
 
-function testFirebaseConnection() {
-    if (!firebaseInitialized || !database) {
-        console.log('Firebase not initialized');
-        return;
-    }
+// function testFirebaseConnection() {
+//     if (!firebaseInitialized || !database) {
+//         console.log('Firebase not initialized');
+//         return;
+//     }
     
-    console.log('Testing Firebase connection...');
-    database.ref('.info/connected').once('value', (snapshot) => {
-        if (snapshot.val() === true) {
-            console.log('Firebase connected successfully');
-        } else {
-            console.log('Firebase not connected');
-        }
-    });
-}
+//     console.log('Testing Firebase connection...');
+//     database.ref('.info/connected').once('value', (snapshot) => {
+//         if (snapshot.val() === true) {
+//             console.log('Firebase connected successfully');
+//         } else {
+//             console.log('Firebase not connected');
+//         }
+//     });
+// }
 
 // Handle user interaction to resume audio context (required by browsers)
 document.addEventListener('click', resumeAudioContext, { once: true });
