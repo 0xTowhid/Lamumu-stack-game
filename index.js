@@ -656,7 +656,7 @@ function shareOnX() {
     // Play button click sound
     playSFX('buttonClick');
     
-    const text = `🐮 Just played Lamamu Cow Stack by @0xTowhid and scored ${score} points with a ${highestStack} cow high stack! Can you beat my score? @lamumudotxyz`;
+    const text = `🐮 Just played Lamumu Cow Stack by @0xTowhid and scored ${score} points with a ${highestStack} cow high stack! Can you beat my score? @lamumudotxyz`;
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank');
 }
