@@ -1,148 +1,3 @@
-let database = null;
-let firebaseInitialized = false;
-
-// function initializeFirebase() {
-//     try {
-//         const firebaseConfig = {
-//             apiKey: "AIzaSyC-0nuM-L5sDFNd0cPrB8QWAwt7A_MMdhM",
-//             authDomain: "cowstackgame.firebaseapp.com",
-//             databaseURL: "https://cowstackgame-default-rtdb.asia-southeast1.firebasedatabase.app",
-//             projectId: "cowstackgame",
-//             storageBucket: "cowstackgame.firebasestorage.app",
-//             messagingSenderId: "353757446914",
-//             appId: "1:353757446914:web:ecc27cdef9514d786ab81b",
-//             measurementId: "G-GRSRV5C3XP"
-//         };
-
-//         if (typeof firebase !== 'undefined') {
-//             firebase.initializeApp(firebaseConfig);
-//             database = firebase.database();
-//             firebaseInitialized = true;
-//             console.log('Firebase initialized successfully');
-            
-//             // Load leaderboard after Firebase is ready
-//             updateLeaderboard();
-//         } else {
-//             console.error('Firebase SDK not loaded');
-//             firebaseInitialized = false;
-//         }
-//     } catch (error) {
-//         console.error('Firebase initialization failed:', error);
-//         firebaseInitialized = false;
-//     }
-// }
-
-// In-memory leaderboard storage (fallback)
-// let gameLeaderboard = [];
-
-// function saveScore() {
-//     // Save locally first (always works)
-//     const newScore = {
-//         username: playerUsername,
-//         score: score,
-//         stackHeight: highestStack,
-//         timeSurvived: timeSurvived,
-//         date: new Date().toLocaleDateString()
-//     };
-    
-//     gameLeaderboard.push(newScore);
-//     gameLeaderboard.sort((a, b) => b.score - a.score);
-//     gameLeaderboard = gameLeaderboard.slice(0, 5);
-    
-//     console.log('Score saved locally:', newScore);
-    
-//     // Save to Firebase if available
-//     if (firebaseInitialized && database) {
-//         const firebaseScore = {
-//             username: playerUsername,
-//             score: score,
-//             stackHeight: highestStack,
-//             timeSurvived: timeSurvived,
-//             timestamp: Date.now(),
-//             date: new Date().toLocaleDateString()
-//         };
-        
-//         database.ref('global-leaderboard').push(firebaseScore)
-//             .then(() => {
-//                 console.log('Score saved to Firebase successfully');
-//                 // Update leaderboard after successful save
-//                 setTimeout(updateLeaderboard, 1000);
-//             })
-//             .catch(error => {
-//                 console.error('Firebase save failed:', error);
-//                 // Show local leaderboard as fallback
-//                 showLocalLeaderboard();
-//             });
-//     } else {
-//         console.log('Firebase not available, showing local leaderboard');
-//         showLocalLeaderboard();
-//     }
-// }
-
-// function updateLeaderboard() {
-//     console.log('Updating leaderboard...');
-    
-//     if (!firebaseInitialized || !database) {
-//         console.log('Firebase not available, showing local leaderboard');
-//         showLocalLeaderboard();
-//         return;
-//     }
-
-//     // Load global leaderboard from Firebase
-//     database.ref('global-leaderboard')
-//         .orderByChild('score')
-//         .limitToLast(5)
-//         .once('value')
-//         .then((snapshot) => {
-//             const globalScores = [];
-//             snapshot.forEach(child => {
-//                 globalScores.unshift(child.val());
-//             });
-            
-//             console.log('Global scores loaded:', globalScores);
-//             displayLeaderboard(globalScores, 'Global Leaderboard');
-//         })
-//         .catch(error => {
-//             console.error('Firebase load failed:', error);
-//             showLocalLeaderboard();
-//         });
-// }
-
-// function showLocalLeaderboard() {
-//     console.log('Showing local leaderboard:', gameLeaderboard);
-//     displayLeaderboard(gameLeaderboard, 'Local Leaderboard');
-// }
-
-// function displayLeaderboard(scores, title) {
-//     const leaderboardList = document.getElementById('leaderboard-list');
-//     const startLeaderboardList = document.getElementById('start-leaderboard-list');
-    
-//     if (!scores || scores.length === 0) {
-//         const emptyHTML = `<div style="text-align: center; opacity: 0.7;">No scores yet!</div>`;
-//         if (leaderboardList) leaderboardList.innerHTML = title + '<br>' + emptyHTML;
-//         if (startLeaderboardList) startLeaderboardList.innerHTML = title + '<br>' + emptyHTML;
-//         return;
-//     }
-    
-//     const leaderboardHTML = scores.map((entry, index) => {
-//         const crown = index === 0 ? '👑' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
-//         return `<div class="leaderboard-entry">
-//             <span class="rank">${crown}#${index + 1}</span>
-//             <span>@${entry.username}</span>
-//             <span>${entry.score}</span>
-//         </div>`;
-//     }).join('');
-    
-//     const displayHTML = title + '<br>' + leaderboardHTML;
-//     if (leaderboardList) leaderboardList.innerHTML = displayHTML;
-//     if (startLeaderboardList) startLeaderboardList.innerHTML = displayHTML;
-    
-//     console.log('Leaderboard displayed successfully');
-// }
-
-
-
-
 let gameState = 'start';
 let score = 0;
 let lives = 3;
@@ -153,7 +8,6 @@ let highestStack = 0;
 let timeSurvived = 0;
 
 // Canvas and game objects
-
 let canvas = null;
 let ctx = null;
 let gameContainer = null;
@@ -183,8 +37,6 @@ let sfxVolume = 0.6;
 let isMuted = false;
 
 // Audio files configuration
-
-
 const audioFiles = {
     backgroundMusic: 'game-sound/bg-music.mp3', // Background game music
     buttonClick: 'game-sound/btn-sound.mp3', // Button click sound
@@ -193,14 +45,9 @@ const audioFiles = {
     gameOver: 'game-sound/game-over-kid-voice-clip-352738.mp3', // Game over sound
     perfectStack: 'perfect-stack.wav', // Sound for perfect placement
     lifeAlert: 'life-alert.wav' // Sound when losing a life
-}
+};
 
-;
-
-
-
-//cows
-
+// Cows
 const cowTypes = [
     { 
         id: 'classic', 
@@ -229,15 +76,10 @@ const cowTypes = [
 ];
 
 // Initialize Audio Context
-
-
 function initializeAudio() {
     try {
-     
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        
         loadAudioFiles();
-        
         console.log('Audio system initialized');
     } catch (error) {
         console.warn('Audio not supported on this device:', error);
@@ -245,8 +87,6 @@ function initializeAudio() {
 }
 
 // Load audio files
-
-
 async function loadAudioFiles() {
     for (const [key, filename] of Object.entries(audioFiles)) {
         try {
@@ -266,8 +106,6 @@ async function loadAudioFiles() {
 }
 
 // Play sound effect
-
-
 function playSFX(soundKey, volume = sfxVolume) {
     if (!audioContext || !audioBuffers[soundKey] || isMuted) return;
     
@@ -287,8 +125,6 @@ function playSFX(soundKey, volume = sfxVolume) {
 }
 
 // Start background music
-
-
 function startBackgroundMusic() {
     if (!audioContext || !audioBuffers.backgroundMusic || isMuted) return;
     
@@ -314,8 +150,6 @@ function startBackgroundMusic() {
 }
 
 // Stop background music
-
-
 function stopBackgroundMusic() {
     if (backgroundMusic) {
         try {
@@ -328,8 +162,6 @@ function stopBackgroundMusic() {
 }
 
 // Resume audio context 
-
-
 function resumeAudioContext() {
     if (audioContext && audioContext.state === 'suspended') {
         audioContext.resume();
@@ -337,8 +169,6 @@ function resumeAudioContext() {
 }
 
 // Toggle mute
-
-
 function toggleMute() {
     isMuted = !isMuted;
     
@@ -462,7 +292,6 @@ function startActualGame() {
     startBackgroundMusic();
     
     // Add touch and click listeners for mobile compatibility
-
     canvas.addEventListener('click', dropCow);
     canvas.addEventListener('touchstart', dropCow, { passive: false });
     
@@ -630,12 +459,10 @@ function updateFallingCows() {
             craneSpeed = Math.min(1.5 + score * 0.008, 4);
         }
         // Check ground collision only if no stack collision occurred
-
         else if (!collisionDetected && cow.y + cow.height >= groundLevel) {
             const cowCenter = cow.x + cow.width / 2;
             
             // Only allow landing in the stacking zone
-
             if (cowCenter >= stackingZoneLeft && cowCenter <= stackingZoneRight) {
                 // Good landing in the zone
                 cow.y = groundLevel - cow.height;
@@ -749,15 +576,10 @@ function drawGame() {
 }
 
 function drawCow(cow) {
-    
     const img = cowImages[cow.id];
     if (img && img.complete && img.naturalHeight > 0) {
-
-
         ctx.drawImage(img, Math.floor(cow.x), Math.floor(cow.y), cow.width, cow.height);
     } else {
-
-
         // Fallback: draw colored rectangle with border
         ctx.fillStyle = cow.color;
         ctx.fillRect(Math.floor(cow.x), Math.floor(cow.y), cow.width, cow.height);
@@ -809,90 +631,12 @@ function endGame() {
     if (timeSurvivedEl) timeSurvivedEl.textContent = timeSurvived + 's';
     if (highestStackEl) highestStackEl.textContent = highestStack;
     
-    // Save score first, then show game over screen
-    saveScore();
-    
     // Show game over screen after a brief delay
     setTimeout(() => {
         document.getElementById('game-screen').classList.remove('active');
         document.getElementById('gameover-screen').classList.add('active');
     }, 500);
 }
-
-// In-memory leaderboard storage
-// let gameLeaderboard = [];
-
-
-// function saveScore() {
-//     // Save locally 
-//     gameLeaderboard.push({
-//         username: playerUsername,
-//         score: score,
-//         stackHeight: highestStack,
-//         timeSurvived: timeSurvived,
-//         date: new Date().toLocaleDateString()
-//     });
-//     gameLeaderboard.sort((a, b) => b.score - a.score);
-//     gameLeaderboard = gameLeaderboard.slice(0, 5);
-    
-//     //Save to Firebase globally
-//     database.ref('global-leaderboard').push({
-//         username: playerUsername,
-//         score: score,
-//         stackHeight: highestStack,
-//         timeSurvived: timeSurvived,
-//         timestamp: Date.now(),
-//         date: new Date().toLocaleDateString()
-//     }).catch(error => console.log('Firebase save failed:', error));
-// }
-
-
-// function updateLeaderboard() {
-
-//     // Load global leaderboard from Firebase
-//     database.ref('global-leaderboard')
-//         .orderByChild('score')
-//         .limitToLast(10)
-//         .once('value', (snapshot) => {
-//             const globalScores = [];
-//             snapshot.forEach(child => globalScores.unshift(child.val()));
-            
-//             // Display global scores
-//             const leaderboardList = document.getElementById('leaderboard-list');
-//             const startLeaderboardList = document.getElementById('start-leaderboard-list');
-            
-//             const leaderboardHTML = globalScores.map((entry, index) => {
-//                 const crown = index === 0 ? '👑' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
-//                 return `<div class="leaderboard-entry">
-//                     <span class="rank">${crown}#${index + 1}</span>
-//                     <span>@${entry.username}</span>
-//                     <span>${entry.score}</span>
-//                 </div>`;
-//             }).join('');
-            
-//             const displayHTML = leaderboardHTML || '<div style="text-align: center; opacity: 0.7;">No global scores yet</div>';
-//             if (leaderboardList) leaderboardList.innerHTML = 'Global Leaderboard <br>' + displayHTML;
-//             if (startLeaderboardList) startLeaderboardList.innerHTML = 'Global Leaderboard <br>' + displayHTML;
-//         })
-//         .catch(error => {
-//             console.log('Firebase load failed, showing local scores');
-//             // Fallback to your existing local leaderboard display
-//             const leaderboardList = document.getElementById('leaderboard-list');
-//             const startLeaderboardList = document.getElementById('start-leaderboard-list');
-            
-//             const leaderboardHTML = gameLeaderboard.map((entry, index) => 
-//                 `<div class="leaderboard-entry">
-//                     <span class="rank">#${index + 1}</span>
-//                     <span>@${entry.username}</span>
-//                     <span>${entry.score}</span>
-//                 </div>`
-//             ).join('');
-            
-//             const displayHTML = leaderboardHTML || '<div style="text-align: center; opacity: 0.7;">No scores yet!</div>';
-//             if (leaderboardList) leaderboardList.innerHTML = displayHTML;
-//             if (startLeaderboardList) startLeaderboardList.innerHTML = displayHTML;
-//         });
-// }
 
 function shareOnX() {
     // Play button click sound
@@ -943,7 +687,6 @@ window.addEventListener('load', () => {
     addButtonSoundEffects();
 });
 
-
 // Handle orientation changes on mobile
 window.addEventListener('orientationchange', function() {
     setTimeout(() => {
@@ -954,23 +697,6 @@ window.addEventListener('orientationchange', function() {
         }
     }, 100);
 });
-
-
-// function testFirebaseConnection() {
-//     if (!firebaseInitialized || !database) {
-//         console.log('Firebase not initialized');
-//         return;
-//     }
-    
-//     console.log('Testing Firebase connection...');
-//     database.ref('.info/connected').once('value', (snapshot) => {
-//         if (snapshot.val() === true) {
-//             console.log('Firebase connected successfully');
-//         } else {
-//             console.log('Firebase not connected');
-//         }
-//     });
-// }
 
 // Handle user interaction to resume audio context (required by browsers)
 document.addEventListener('click', resumeAudioContext, { once: true });
