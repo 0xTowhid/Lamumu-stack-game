@@ -47,7 +47,7 @@ function saveScore() {
     
     gameLeaderboard.push(newScore);
     gameLeaderboard.sort((a, b) => b.score - a.score);
-    gameLeaderboard = gameLeaderboard.slice(0, 10);
+    gameLeaderboard = gameLeaderboard.slice(0, 5);
     
     console.log('Score saved locally:', newScore);
     
@@ -91,7 +91,7 @@ function updateLeaderboard() {
     // Load global leaderboard from Firebase
     database.ref('global-leaderboard')
         .orderByChild('score')
-        .limitToLast(10)
+        .limitToLast(5)
         .once('value')
         .then((snapshot) => {
             const globalScores = [];
